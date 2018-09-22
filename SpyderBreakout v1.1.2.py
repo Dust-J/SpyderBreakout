@@ -44,12 +44,14 @@ C=['# -*- coding: utf-8 -*-',
 '        return self.width']
 
 import pygame
+import random
 
 pygame.init()
 clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 width, height =pygame.display.get_surface().get_size()
+msg=''
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -71,8 +73,40 @@ class CodeBrick(pygame.sprite.Sprite):
         self.rect.x=50
         self.image.blit(self.textSurf, [0, 0])
         
-    def getValue(self):
-        return self.width
+        
+class Ball(pygame.sprite.Sprite):
+    def __init__(self, color, pos, text='0'):
+        pygame.sprite.Sprite.__init__(self)
+        self.x_step=random.randint(5,10)
+        self.y_step=random.randint(5,10)
+
+        self.font = pygame.font.SysFont("Consolas", 20)
+        self.textSurf = self.font.render(text, 5, color, pygame.SRCALPHA)
+        self.width, self.height = self.font.size(text)
+        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.image.blit(self.textSurf, [0, 0])
+
+        self.rect = self.image.get_rect()
+        self.rect.center = pos
+        
+    def update(self):
+        x,y=self.rect.center
+        if x<(self.height/2)+50 or x>1142-(self.height/2):
+            self.x_step=-self.x_step
+        if y<(self.height/2)+150: 
+            self.y_step=-self.y_step
+        if abs(self.x_step)<2 or abs(self.y_step)<2:
+            self.x_step+= random.randint(-3,3)
+            self.y_step+= random.randint(-3,3)
+        if y>height-(self.height/2)-30:
+            pygame.quit()
+            exit()
+        self.rect.center=(x+self.x_step, y+self.y_step)
+
+    def turn(self):
+        x,y=self.rect.center
+        self.y_step=-self.y_step-random.randint(-2,2)
+        self.rect.center=(x+self.x_step, y+self.y_step)
         
         
 class Xbox(pygame.sprite.Sprite):
@@ -89,8 +123,7 @@ class Xbox(pygame.sprite.Sprite):
         self.rect.x = max(50, min(dx, 1000))
                 
 
-#code=CodeBrick()
-#print(code.getValue())
+
 all_bricks=pygame.sprite.Group()
 cnt=150
 for i in C:
@@ -102,6 +135,7 @@ for i in C:
     
     
 player=Xbox()
+ball=Ball((0,0,255), (200,200))
 BackGround = Background('img/background_image.png', [0,0])
 
 run=True
@@ -116,12 +150,29 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             player.move(pygame.mouse.get_pos()[0]-40)
         
-
+    myfont = pygame.font.SysFont("Consolas", 30, bold=True)
+    label=myfont.render(msg, 5, (255,0,0))
+    screen.blit(label, (50,150))
+    
     screen.blit(BackGround.image, BackGround.rect)
     all_bricks.draw(screen)
     screen.blit(player.image, player.rect)
     
+    screen.blit(ball.image, ball.rect)
+    screen.blit(player.image, player.rect)
+    ball.update()
+    
+    print(all_bricks)
+
+    if pygame.sprite.spritecollide(ball, all_bricks, True):
+        ball.turn()
+    if pygame.sprite.collide_rect(player, ball):
+        ball.turn()
+    if not all_bricks.sprites() and not msg:
+        msg+='Victory! ٩(●˙3˙●)۶'
+        exit()
+    
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(5000)
 
 pygame.quit()
