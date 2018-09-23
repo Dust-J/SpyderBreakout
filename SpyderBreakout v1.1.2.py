@@ -38,10 +38,7 @@ C=['# -*- coding: utf-8 -*-',
 '        self.image = pygame.Surface((self.width, height), pygame.SRCALPHA)',
 '        self.rect = self.image.get_rect()',
 '        self.rect.x, self.rect.y=50, 150',
-'        self.image.blit(self.textSurf, [0, 0])',
-'',
-'    def getValue(self):',
-'        return self.width']
+'        self.image.blit(self.textSurf, [0, 0])']
 
 import pygame
 import random
@@ -50,6 +47,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+pygame.display.set_caption('Spyder Breakout')
 width, height =pygame.display.get_surface().get_size()
 msg=''
 
@@ -91,7 +89,7 @@ class Ball(pygame.sprite.Sprite):
         
     def update(self):
         x,y=self.rect.center
-        if x<(self.height/2)+50 or x>1142-(self.height/2):
+        if x<(self.height/2)+50 or x>1140-(self.height/2):
             self.x_step=-self.x_step
         if y<(self.height/2)+150: 
             self.y_step=-self.y_step
