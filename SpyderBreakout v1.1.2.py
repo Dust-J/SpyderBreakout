@@ -5,40 +5,40 @@ Created on Thu Sep 20 15:02:21 2018
 @author: Dust-J
 """
 
-C=['# -*- coding: utf-8 -*-',
-'"""', 
-'Created on Thu Sep 20 15:02:21 2018', 
-'',
-'@author: Dust-J', 
-'"""',
-'',
-'import pygame',
-'',
-'pygame.init()',
-'clock = pygame.time.Clock()',
-'',
-'screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)',
-'width, height =pygame.display.get_surface().get_size()',
-'',
-'class Background(pygame.sprite.Sprite):',
-'    def __init__(self, image_file, location):',
-'        pygame.sprite.Sprite.__init__(self)',
-'        self.image = pygame.image.load(image_file)',
-'        self.image = pygame.transform.scale(self.image, pygame.display.get_surface().get_size())',
-'        self.rect = self.image.get_rect()',
-'        self.rect.left, self.rect.top = location',
-'',
-'',
-'class CodeBrick(pygame.sprite.Sprite):',
-'    def __init__(self, text=\'text\', color=(0,0,0), size=20):',
-'        pygame.sprite.Sprite.__init__(self)',
-'        self.font = pygame.font.SysFont("Consolas", size)',
-'        self.textSurf = self.font.render(text, 5, color, pygame.SRCALPHA)',
-'        self.width, height = self.font.size(text)',
-'        self.image = pygame.Surface((self.width, height), pygame.SRCALPHA)',
-'        self.rect = self.image.get_rect()',
-'        self.rect.x, self.rect.y=50, 150',
-'        self.image.blit(self.textSurf, [0, 0])']
+C=[['# -*- coding: utf-8 -*-', (175,175,175)],
+['"""', (38,182,55)], 
+['Created on Thu Sep 20 15:02:21 2018', (38,182,55)], 
+['', (38,182,55)],
+['@author: Dust-J', (38,182,55)], 
+['"""', (38,182,55)],
+['', (0,0,0)],
+['import pygame', (0,0,0)],
+['', (0,0,0)],
+['pygame.init()', (0,0,0)],
+['clock = pygame.time.Clock()', (0,0,0)],
+['', (0,0,0)],
+['screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)', (0,0,0)],
+['width, height =pygame.display.get_surface().get_size()', (0,0,0)],
+['', (0,0,0)],
+['class Background(pygame.sprite.Sprite):', (0,0,0)],
+['    def __init__(self, image_file, location):', (0,0,0)],
+['        pygame.sprite.Sprite.__init__(self)', (0,0,0)],
+['        self.image = pygame.image.load(image_file)', (0,0,0)],
+['        self.image = pygame.transform.scale(self.image, pygame.display.get_surface().get_size())', (0,0,0)],
+['        self.rect = self.image.get_rect()', (0,0,0)],
+['        self.rect.left, self.rect.top = location', (0,0,0)],
+['', (0,0,0)],
+['', (0,0,0)],
+['class CodeBrick(pygame.sprite.Sprite):', (0,0,0)],
+['    def __init__(self, text=\'text\', color=(0,0,0), size=20):', (0,0,0)],
+['        pygame.sprite.Sprite.__init__(self)', (0,0,0)], 
+['        self.font = pygame.font.SysFont("Consolas", size)', (0,0,0)],
+['        self.textSurf = self.font.render(text, 5, color, pygame.SRCALPHA)', (0,0,0)],
+['        self.width, height = self.font.size(text)', (0,0,0)],
+['        self.image = pygame.Surface((self.width, height), pygame.SRCALPHA)', (0,0,0)],
+['        self.rect = self.image.get_rect()', (0,0,0)],
+['        self.rect.x, self.rect.y=50, 150', (0,0,0)],
+['        self.image.blit(self.textSurf, [0, 0])', (0,0,0)]]
 
 import pygame
 import random
@@ -125,8 +125,8 @@ class Xbox(pygame.sprite.Sprite):
 all_bricks=pygame.sprite.Group()
 cnt=150
 for i in C:
-    if i:
-        tmp=CodeBrick(i)
+    if i[0]:
+        tmp=CodeBrick(i[0], i[1])
         tmp.rect.y+=cnt
         all_bricks.add(tmp)
     cnt+=21
