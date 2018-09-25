@@ -49,7 +49,6 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 pygame.display.set_caption('Spyder Breakout')
 width, height =pygame.display.get_surface().get_size()
-msg=''
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -148,9 +147,9 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             player.move(pygame.mouse.get_pos()[0]-40)
         
-    myfont = pygame.font.SysFont("Consolas", 30, bold=True)
-    label=myfont.render(msg, 5, (255,0,0))
-    screen.blit(label, (50,150))
+#    myfont = pygame.font.SysFont("Consolas", 30, bold=True)
+#    label=myfont.render(msg, 5, (255,0,0))
+#    screen.blit(label, (50,150))
     
     screen.blit(BackGround.image, BackGround.rect)
     all_bricks.draw(screen)
@@ -160,14 +159,16 @@ while run:
     screen.blit(player.image, player.rect)
     ball.update()
     
-    print(all_bricks)
+    print(bool(all_bricks.sprites()))
 
     if pygame.sprite.spritecollide(ball, all_bricks, True):
         ball.turn()
     if pygame.sprite.collide_rect(player, ball):
         ball.turn()
-    if not all_bricks.sprites() and not msg:
-        msg+='Victory! ٩(●˙3˙●)۶'
+    if not all_bricks.sprites(): # and not msg:
+        msg=CodeBrick('Victory! \(●˙3˙●)/', (255,0,0), 30)
+        msg.rect.y=150
+        screen.blit(msg.image, msg.rect)
         exit()
     
     pygame.display.flip()
