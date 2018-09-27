@@ -61,7 +61,7 @@ class Background(pygame.sprite.Sprite): #배경 함수
         
         
 class CodeBrick(pygame.sprite.Sprite): #벽돌 함수
-    def __init__(self, text='text', color=(0,0,0), size=20):
+    def __init__(self, text='text', color=(0,0,0), size=19):
         pygame.sprite.Sprite.__init__(self)
         self.font = pygame.font.SysFont("Consolas", size)
         self.textSurf = self.font.render(text, 5, color, pygame.SRCALPHA)
@@ -96,12 +96,16 @@ class Ball(pygame.sprite.Sprite): #공 함수
         if abs(self.x_step)<2 or abs(self.y_step)<2: #저속, step=0 루프 방지
             self.x_step+= random.randint(-3,3) # 공 x속도 랜덤 조절
             self.y_step+= random.randint(-3,3) # 공 y속도 랜덤 조절
-        if y>height-(self.height/2)-30: #바닥 접촉시 삭제
+        if y>height-(self.height/2)-40: #바닥 접촉시 삭제
             self.kill()
         self.rect.center=(x+self.x_step, y+self.y_step)
-
-    def turn(self):
-        self.y_step=-self.y_step-random.randint(-2,2)
+        
+        if pygame.sprite.collide_rect(player, self): # or pygame.sprite.spritecollide(self, all_bricks, True):
+            self.y_step=-self.y_step-random.randint(-2,2)
+        if pygame.sprite.spritecollide(self, all_bricks, True):
+            self.y_step=-self.y_step-random.randint(-2,2)
+            if len(balls)<3: #공 개수는 최대 3개
+                balls.add(Ball((255,0,0), self.rect.center))
         
         
 class Xbox(pygame.sprite.Sprite):
@@ -125,8 +129,7 @@ for i in C:
         tmp=CodeBrick(i[0], i[1])
         tmp.rect.y+=cnt
         all_bricks.add(tmp)
-    cnt+=21 #\n역할
-    
+    cnt+=20 #\n역할
     
 player=Xbox()
 balls=pygame.sprite.Group()
@@ -145,29 +148,18 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             player.move(pygame.mouse.get_pos()[0]-40)
         
-
     screen.blit(BackGround.image, BackGround.rect)
     all_bricks.draw(screen)
+    balls.draw(screen)
     screen.blit(player.image, player.rect)
-    
-    screen.blit(player.image, player.rect)
+    balls.update()
     
     if not balls.sprites(): # 공 모두 죽으면 실패
-        msg=CodeBrick('Fail...(i-i)', (255,0,0), 30)
+        msg=CodeBrick('Fail...(;-;)', (255,0,0), 30)
         msg.rect.y=150
         screen.blit(msg.image, msg.rect)
         run = False
         exit()
-        
-    for ball in balls: 
-        screen.blit(ball.image, ball.rect)
-        ball.update()
-        if pygame.sprite.spritecollide(ball, all_bricks, True):
-            ball.turn()
-            if len(balls)%3: #공 개수는 최대 3개
-                balls.add(Ball((255,0,0), ball.rect.center))
-        if pygame.sprite.collide_rect(player, ball):
-            ball.turn()
             
     if not all_bricks.sprites(): #벽돌 모두 깨면 성공
         msg=CodeBrick('Victory! \(●˙3˙●)/', (255,0,0), 30)
@@ -176,7 +168,6 @@ while run:
         #run=False
         exit()
         
-    
     pygame.display.flip()
     clock.tick(5000)
 
