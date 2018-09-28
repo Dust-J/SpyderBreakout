@@ -49,7 +49,7 @@ clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 pygame.display.set_caption('Spyder Breakout')
-width, height =pygame.display.get_surface().get_size()
+width, height = pygame.display.get_surface().get_size()
 
 class Background(pygame.sprite.Sprite): #배경 함수
     def __init__(self, image_file, location):
@@ -120,7 +120,7 @@ class Xbox(pygame.sprite.Sprite):
         
     def move(self, dx):
         self.rect.x = max(50, min(dx, 1000)) # 50~1000안의 공간에서 움직임
-                
+    
 
 all_bricks=pygame.sprite.Group()
 cnt=150
@@ -155,20 +155,19 @@ while run:
     balls.update()
     
     if not balls.sprites(): # 공 모두 죽으면 실패
-        msg=CodeBrick('Fail...(;-;)', (255,0,0), 30)
-        msg.rect.y=150
+        msg=CodeBrick('Fail...(;-;)', (255,0,0), 65)
+        msg.rect.x, msg.rect.y=700, 150
         screen.blit(msg.image, msg.rect)
         run = False
-        exit()
             
     if not all_bricks.sprites(): #벽돌 모두 깨면 성공
-        msg=CodeBrick('Victory! \(●˙3˙●)/', (255,0,0), 30)
+        msg=CodeBrick('Victory! \(●˙O˙●)/', (255,0,0), 65)
         msg.rect.y=150
         screen.blit(msg.image, msg.rect)
         #run=False
-        exit()
         
     pygame.display.flip()
     clock.tick(5000)
 
+pygame.time.delay(1000)
 pygame.quit()
